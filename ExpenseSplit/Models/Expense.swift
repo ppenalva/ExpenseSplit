@@ -8,7 +8,7 @@
 import Foundation
 
 extension PartyInfo {
-    struct Expense: Identifiable  {
+    struct Expense: Identifiable, Codable  {
         let id: UUID
         var description: String
         var totalValue: Double
@@ -24,7 +24,7 @@ extension PartyInfo {
     }
 }
 extension PartyInfo.Expense {
-    struct Payer: Identifiable {
+    struct Payer: Identifiable, Codable {
         let id: UUID
         var payerName: String
         var amountPayed: Double

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PartyInfo: Identifiable {
+struct PartyInfo: Identifiable, Codable {
     let id: UUID
     var title: String
     var participants: [Participant]
