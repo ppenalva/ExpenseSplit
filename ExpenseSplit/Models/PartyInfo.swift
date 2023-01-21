@@ -8,7 +8,7 @@
 import Foundation
 
 struct PartyInfo: Identifiable, Codable {
-    let id: UUID
+    var id: UUID
     var title: String
     var participants: [Participant]
     var theme: Theme
@@ -34,6 +34,21 @@ extension PartyInfo {
     }
     var data: Data {
         Data(title: title, participants: participants, theme: theme)
+    }
+    
+    mutating func update(from data: Data) {
+        title = data.title
+        participants = data.participants
+        theme = data.theme
+        expenses = data.expenses
+    }
+    
+    init(data: Data) {
+        id = UUID()
+        title = data.title
+        participants = data.participants
+        theme = data.theme
+        expenses = data.expenses
     }
 }
 

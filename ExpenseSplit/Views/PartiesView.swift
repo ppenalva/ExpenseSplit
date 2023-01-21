@@ -13,13 +13,56 @@ struct PartiesView: View {
     
     @Environment(\.scenePhase) private var scenePhase
     
+    @State private var newPartyData = PartyInfo.Data()
+    
+    @State private var isPresentingNewPartyView = false
+    
     let saveAction: ()->Void
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
         
-            .onChange(of: scenePhase) { phase in
-                if phase == .inactive { saveAction() }
+        List {
+            ForEach($parties) { $party in
+                NavigationLink(destination: PartyDetailView(party: $party)) {
+                    PartyView(party: $party)
+                        .listRowBackground(party.theme.mainColor)
+                }
             }
+            
+        }
+        .navigationTitle("Parties")
+        .toolbar {
+            Button(action: {
+                newPartyData = PartyInfo.Data()
+                isPresentingNewPartyView = true}) {
+                    Image(systemName: "plus")
+                }
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase == .inactive { saveAction() }
+        }
+        .sheet(isPresented: $isPresentingNewPartyView) {
+            NavigationView {
+                PartyDetailEditView( dataParty: $newPartyData)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Dismiss") {
+                                isPresentingNewPartyView = false
+                                newPartyData = PartyInfo.Data()
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Add") {
+                                let newParty = PartyInfo(data: newPartyData)
+                                parties.append(newParty)
+                                isPresentingNewPartyView = false
+                                newPartyData = PartyInfo.Data()
+                            }
+                        }
+                    }
+            }
+            
+        }
     }
+       
 }
