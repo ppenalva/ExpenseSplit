@@ -19,9 +19,10 @@ struct PartyDetailEditView: View {
             Section(header: Text(" PARTY INFO")) {
                 
                 TextField("Title",text: $dataParty.title)
-                ThemePicker(selection: $dataParty.theme)
+            
+                    ThemePicker(selection: $dataParty.theme)
+            
             }
-                
             Section(header: Text("PARTICIPANTS")) {
                 ForEach(dataParty.participants) { participant in
                     Text(participant.name)

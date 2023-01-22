@@ -20,7 +20,9 @@ struct PartyView: View {
                 Label("\(party.participants.count)", systemImage: "person.3")
                     .padding(.trailing, 20)
             }
-            
+            .font(.caption)
         }
+        .padding()
+        .foregroundColor(party.theme.accentColor)
     }
 }

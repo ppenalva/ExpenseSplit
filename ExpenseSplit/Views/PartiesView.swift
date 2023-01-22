@@ -23,10 +23,9 @@ struct PartiesView: View {
         
         List {
             ForEach($parties) { $party in
-                NavigationLink(destination: PartyDetailView(party: $party)) {
-                    PartyView(party: $party)
-                        .listRowBackground(party.theme.mainColor)
-                }
+                NavigationLink(destination: PartyDetailView(party: $party))
+                { PartyView(party: $party)}
+                    .listRowBackground(party.theme.mainColor)
             }
             
         }

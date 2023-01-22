@@ -36,3 +36,26 @@ extension PartyInfo.Expense {
         }
     }
 }
+extension PartyInfo.Expense {
+    struct Data {
+        var description: String = ""
+        var totalValue: Double = 0.0
+        var payers: [Payer] = []
+    }
+        
+    var data: Data {
+    Data(description: description, totalValue: totalValue, payers: payers)
+    }
+    mutating func update(from data: Data) {
+        description = data.description
+        totalValue = data.totalValue
+        payers = data.payers
+    }
+    init(data: Data) {
+        id = UUID()
+        description = data.description
+        totalValue = data.totalValue
+        payers = data.payers
+    }
+    
+}
