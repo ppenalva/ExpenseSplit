@@ -15,6 +15,7 @@ struct PartyDetailView: View {
     @State private var isPresentingPartyEditView = false
     
     @State private var newExpenseData = PartyInfo.Expense.Data()
+    @State private var newPayerData = PartyInfo.Expense.Payer.Data()
     @State private var isPresentingNewExpenseView = false
    
     @State private var isPresentingNewPaymentView = false
@@ -37,8 +38,12 @@ struct PartyDetailView: View {
                     
                     newExpenseData.description = ""
                     newExpenseData.totalValue = 0.0
-                    newExpenseData.payers = []
-                    
+                    for participant in party.participants {
+                        newPayerData.payerName = participant.name
+                        newPayerData.amountPayed = 0.0
+                        let newPayer = PartyInfo.Expense.Payer(data: newPayerData)
+                        newExpenseData.payers.append(newPayer)
+                    }
                     isPresentingNewExpenseView = true
                    
                 }
@@ -57,7 +62,13 @@ struct PartyDetailView: View {
                     }
                 }
             }
-            
+            Section(header: Text("Expenses")) {
+                ForEach(party.expenses) { expense in
+                    HStack {
+                        Label(expense.description, systemImage: "r.circle")
+                    }
+                }
+            }
             
         }
         
@@ -89,7 +100,7 @@ struct PartyDetailView: View {
         }
         .sheet(isPresented: $isPresentingNewExpenseView) {
             NavigationView {
-                ExpenseDetailEditView(party: $party, dataExpense: $newExpenseData)
+                ExpenseDetailEditView(party: $party,   expenseData: $newExpenseData)
                     .navigationTitle("Expenses")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {

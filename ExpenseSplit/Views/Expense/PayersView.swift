@@ -9,14 +9,16 @@ import SwiftUI
 
 struct PayersView: View {
     
-    @Binding var dataExpense: PartyInfo.Expense.Data
+    @Binding var expenseData: PartyInfo.Expense.Data
+    
     
     var body: some View {
-        
-        ForEach ( $dataExpense.payers) { $payer in
-            HStack {
+        List {
+            ForEach ( $expenseData.payers) { $payer in
+            HStack{
                 Text(payer.payerName)
                 TextField("Amount", value: $payer.amountPayed, format: .number)
+            }
             }
         }
     }

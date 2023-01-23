@@ -59,3 +59,24 @@ extension PartyInfo.Expense {
     }
     
 }
+
+extension PartyInfo.Expense.Payer{
+    struct Data {
+        var payerName: String = ""
+        var amountPayed: Double = 0.0
+    }
+        
+    var data: Data {
+    Data(payerName: payerName, amountPayed: amountPayed)
+    }
+    mutating func update(from data: Data) {
+        payerName = data.payerName
+        amountPayed = data.amountPayed
+    }
+    init(data: Data) {
+        id = UUID()
+        payerName = data.payerName
+        amountPayed = data.amountPayed
+    }
+}
+

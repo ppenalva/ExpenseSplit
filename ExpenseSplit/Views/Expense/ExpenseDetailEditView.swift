@@ -10,7 +10,13 @@ import SwiftUI
 struct ExpenseDetailEditView: View {
     
     @Binding var party: PartyInfo
-    @Binding var dataExpense: PartyInfo.Expense.Data
+    
+    @Binding var expenseData: PartyInfo.Expense.Data
+
+    @State var payersData = PartyInfo.Expense.Payer.Data()
+    
+    @State var newPayerData =  PartyInfo.Expense.Payer.Data()
+   
     
     @State private var isPresentingPayersView = false
     @State private var isPresentingEnjoyersView = false
@@ -18,19 +24,12 @@ struct ExpenseDetailEditView: View {
     var body: some View {
         List {
             Section(header: Text(" Expense Info")) {
-                TextField("Description",text: $dataExpense.description)
-                TextField("Amount", value: $dataExpense.totalValue, format: .number)
+                TextField("Description",text: $expenseData.description)
+                TextField("Amount", value: $expenseData.totalValue, format: .number)
             }
             HStack {
                 Button ("Payers") {
-                   
-                    var newPayment = PartyInfo.Expense.Payer(payerName: "", amountPayed: 0.0)
-                    for participant in party.participants {
-                        newPayment.payerName = participant.name
-                        newPayment.amountPayed = 0.0
-                        dataExpense.payers.append (newPayment)
-                    }
-                    
+                      
                     isPresentingPayersView = true
                 }
                 .buttonStyle(BorderlessButtonStyle())
@@ -44,14 +43,17 @@ struct ExpenseDetailEditView: View {
             
             
             Section(header: Text("Payers")) {
-                ForEach(dataExpense.payers) {payer in
+                ForEach(expenseData.payers) {payer in
+                
+                    Text(payer.payerName)
+                    
                     
                 }
             }
         }
         .sheet(isPresented: $isPresentingPayersView) {
             NavigationView {
-                PayersView(dataExpense: $dataExpense)
+                PayersView( expenseData: $expenseData)
                     .navigationTitle("Payers")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -61,6 +63,7 @@ struct ExpenseDetailEditView: View {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Add") {
+                                
                                 
                                 isPresentingPayersView = false
                                 

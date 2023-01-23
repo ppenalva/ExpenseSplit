@@ -9,8 +9,7 @@ import SwiftUI
 
 struct PartyDetailEditView: View {
     
-    @Binding var dataParty
-    :PartyInfo.Data
+    @Binding var dataParty: PartyInfo.Data
     
     @State private var newParticipantName = ""
     
@@ -35,7 +34,7 @@ struct PartyDetailEditView: View {
                     Button(action: {
                         withAnimation {
                             let participant = PartyInfo.Participant(name: newParticipantName)
-                            dataParty  .participants.append(participant)
+                            dataParty.participants.append(participant)
                             newParticipantName = ""
                         }
                     }) {
