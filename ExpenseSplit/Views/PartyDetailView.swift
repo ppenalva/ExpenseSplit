@@ -63,9 +63,11 @@ struct PartyDetailView: View {
                 }
             }
             Section(header: Text("Expenses")) {
-                ForEach(party.expenses) { expense in
-                    HStack {
-                        Label(expense.description, systemImage: "r.circle")
+                ForEach($party.expenses) { $expense in
+                    NavigationLink(destination: ExpenseDetailView(expense: $expense)) {
+                        HStack {
+                            Label(expense.description, systemImage: "r.circle")
+                        }
                     }
                 }
             }
@@ -106,6 +108,7 @@ struct PartyDetailView: View {
                         ToolbarItem(placement: .cancellationAction) {
                             Button("Dismiss") {
                                 isPresentingNewExpenseView = false
+                                newExpenseData = PartyInfo.Expense.Data()
                             }
                         }
                         ToolbarItem(placement: .confirmationAction) {
@@ -113,6 +116,7 @@ struct PartyDetailView: View {
                                 let newExpense = PartyInfo.Expense(data: newExpenseData)
                                 party.expenses.append(newExpense)
                             isPresentingNewExpenseView = false
+                                newExpenseData = PartyInfo.Expense.Data()
                                 
                             }
                         }
