@@ -11,8 +11,11 @@ struct ExpenseDetailView: View {
     
     @Binding var expense: PartyInfo.Expense
     
+    @State private var dataExpense = PartyInfo.Expense.Data()
+    
     @State private var isPresentingPayersView = false
     @State private var isPresentingEnjoyersView = false
+    @State private var isPresentingExpenseDetailEditView = false
     
     var body: some View {
         List {
@@ -37,12 +40,58 @@ struct ExpenseDetailView: View {
             
             Section(header: Text("Payers")) {
                 ForEach(expense.payers) {payer in
-                
-                    Text(payer.payerName)
-                    
-                    
+                    if (payer.isOn) {
+                        HStack {
+                            Text(payer.payerName)
+                            Spacer()
+                            Text(String(format: "%.2f",payer.exceptionAmount))
+                            Spacer()
+                            Text(String(format: "%.2f", calculatePayerAmount(payer: payer)))
+                        }
+                    }
                 }
             }
+        }
+        .toolbar {
+            Button("Edit") {
+                isPresentingExpenseDetailEditView = true
+                dataExpense = expense.data
+            }
+        }
+        .navigationTitle(dataExpense.description)
+        .sheet(isPresented: $isPresentingExpenseDetailEditView) {
+            NavigationView {
+                ExpenseDetailEditView (expenseData: $dataExpense)
+                    .navigationTitle(expense.description)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                isPresentingExpenseDetailEditView = false
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Confirm") {
+                                expense.update(from: dataExpense )
+                                isPresentingExpenseDetailEditView = false
+                            }
+                        }
+                    }
+            }
+        }
+    }
+    func calculatePayerAmount (payer: PartyInfo.Expense.Payer ) -> Double {
+        if (payer.exceptionAmount != 0) {
+            return payer.exceptionAmount
+        } else {
+            var totalExceptionValue = 0.0
+            var counter = 0.0
+            for (expensePayer) in expense.payers {
+                totalExceptionValue += expensePayer.exceptionAmount
+                if (expensePayer.isOn && expensePayer.exceptionAmount == 0.0) {
+                    counter += 1.0
+                }
+            }
+            return (expense.totalValue - totalExceptionValue) / counter
         }
     }
 }

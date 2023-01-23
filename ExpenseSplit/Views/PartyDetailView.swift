@@ -21,6 +21,7 @@ struct PartyDetailView: View {
     @State private var isPresentingNewPaymentView = false
     
     var body: some View {
+        
         List {
             Section(header: Text(" Party Info")) {
                 HStack {
@@ -40,7 +41,7 @@ struct PartyDetailView: View {
                     newExpenseData.totalValue = 0.0
                     for participant in party.participants {
                         newPayerData.payerName = participant.name
-                        newPayerData.amountPayed = 0.0
+                        newPayerData.exceptionAmount = 0.0
                         let newPayer = PartyInfo.Expense.Payer(data: newPayerData)
                         newExpenseData.payers.append(newPayer)
                     }
@@ -69,6 +70,7 @@ struct PartyDetailView: View {
                             Label(expense.description, systemImage: "r.circle")
                         }
                     }
+                    .isDetailLink(false)
                 }
             }
             
@@ -102,7 +104,7 @@ struct PartyDetailView: View {
         }
         .sheet(isPresented: $isPresentingNewExpenseView) {
             NavigationView {
-                ExpenseDetailEditView(party: $party,   expenseData: $newExpenseData)
+                ExpenseDetailEditView(expenseData: $newExpenseData)
                     .navigationTitle("Expenses")
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {

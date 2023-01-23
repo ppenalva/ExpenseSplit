@@ -16,7 +16,7 @@ class PartyInfoStore: ObservableObject {
                                     in: .userDomainMask,
                                     appropriateFor: nil,
                                     create: false)
-        .appendingPathComponent("parties.data")
+        .appendingPathComponent("parties1.data")
     }
     static func load(completion: @escaping (Result<[PartyInfo], Error>)->Void) {
         DispatchQueue.global(qos: .background).async {

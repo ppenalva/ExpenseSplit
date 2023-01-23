@@ -16,8 +16,9 @@ struct PayersView: View {
         List {
             ForEach ( $expenseData.payers) { $payer in
             HStack{
+                Toggle(isOn: $payer.isOn){}
                 Text(payer.payerName)
-                TextField("Amount", value: $payer.amountPayed, format: .number)
+                TextField("Amount", value: $payer.exceptionAmount, format: .number)
             }
             }
         }

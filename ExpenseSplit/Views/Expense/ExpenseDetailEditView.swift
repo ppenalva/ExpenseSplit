@@ -9,8 +9,6 @@ import SwiftUI
 
 struct ExpenseDetailEditView: View {
     
-    @Binding var party: PartyInfo
-    
     @Binding var expenseData: PartyInfo.Expense.Data
 
     @State var payersData = PartyInfo.Expense.Payer.Data()
@@ -63,8 +61,6 @@ struct ExpenseDetailEditView: View {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Add") {
-                                
-                                
                                 isPresentingPayersView = false
                                 
                             }

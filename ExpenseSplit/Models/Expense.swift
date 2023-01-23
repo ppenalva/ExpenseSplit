@@ -26,13 +26,15 @@ extension PartyInfo {
 extension PartyInfo.Expense {
     struct Payer: Identifiable, Codable {
         let id: UUID
+        var isOn: Bool
         var payerName: String
-        var amountPayed: Double
+        var exceptionAmount: Double
         
-        init(id: UUID = UUID(), payerName: String, amountPayed: Double) {
+        init(id: UUID = UUID(), isOn: Bool, payerName: String, exceptionAmount: Double) {
             self.id = id
+            self.isOn = isOn
             self.payerName = payerName
-            self.amountPayed = amountPayed  
+            self.exceptionAmount = exceptionAmount
         }
     }
 }
@@ -62,21 +64,24 @@ extension PartyInfo.Expense {
 
 extension PartyInfo.Expense.Payer{
     struct Data {
+        var isOn: Bool = false
         var payerName: String = ""
-        var amountPayed: Double = 0.0
+        var exceptionAmount: Double = 0.0
     }
         
     var data: Data {
-    Data(payerName: payerName, amountPayed: amountPayed)
+        Data(isOn: isOn, payerName: payerName, exceptionAmount: exceptionAmount)
     }
     mutating func update(from data: Data) {
+        isOn = data.isOn
         payerName = data.payerName
-        amountPayed = data.amountPayed
+        exceptionAmount = data.exceptionAmount
     }
     init(data: Data) {
         id = UUID()
+        isOn = data.isOn
         payerName = data.payerName
-        amountPayed = data.amountPayed
+        exceptionAmount = data.exceptionAmount
     }
 }
 

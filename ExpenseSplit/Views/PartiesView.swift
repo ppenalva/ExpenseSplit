@@ -25,6 +25,7 @@ struct PartiesView: View {
             ForEach($parties) { $party in
                 NavigationLink(destination: PartyDetailView(party: $party))
                 { PartyView(party: $party)}
+                    .isDetailLink(false)
                     .listRowBackground(party.theme.mainColor)
             }
             
