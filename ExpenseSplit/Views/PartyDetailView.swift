@@ -17,7 +17,7 @@ struct PartyDetailView: View {
     @State private var newExpenseData = PartyInfo.Expense.Data()
     @State private var newPayerData = PartyInfo.Expense.Payer.Data()
     @State private var isPresentingNewExpenseView = false
-   
+    
     @State private var isPresentingNewPaymentView = false
     
     var body: some View {
@@ -46,23 +46,26 @@ struct PartyDetailView: View {
                         newExpenseData.payers.append(newPayer)
                     }
                     isPresentingNewExpenseView = true
-                   
+                    
                 }
                 .buttonStyle(BorderlessButtonStyle())
-               Spacer()
-               Button ("New Payment") {
+                Spacer()
+                Button ("New Payment") {
                     isPresentingNewPaymentView = true
-               }
-               .buttonStyle(BorderlessButtonStyle())
+                }
+                .buttonStyle(BorderlessButtonStyle())
             }
             
             Section(header: Text("Participants")) {
                 ForEach(party.participants) { participant in
                     HStack {
-                        Label(participant.name, systemImage: "person")
+                        Text(participant.name)
+                        Spacer()
+                        Text(String(format: "%.2f", calculateParticipantPaidAmount(participant: participant.name)))
                     }
                 }
             }
+            
             Section(header: Text("Expenses")) {
                 ForEach($party.expenses) { $expense in
                     NavigationLink(destination: ExpenseDetailView(expense: $expense)) {
@@ -73,8 +76,8 @@ struct PartyDetailView: View {
                     .isDetailLink(false)
                 }
             }
-            
         }
+    
         
         .navigationTitle(party.title)
         .toolbar {
@@ -117,7 +120,7 @@ struct PartyDetailView: View {
                             Button("Add") {
                                 let newExpense = PartyInfo.Expense(data: newExpenseData)
                                 party.expenses.append(newExpense)
-                            isPresentingNewExpenseView = false
+                                isPresentingNewExpenseView = false
                                 newExpenseData = PartyInfo.Expense.Data()
                                 
                             }
@@ -146,6 +149,31 @@ struct PartyDetailView: View {
             }
             .navigationTitle("Mi pantalla otra")
         }
+    }
+    func calculateParticipantPaidAmount (participant: String ) -> Double {
+        var totalParticipantPaid = 0.0
+        for (expense) in party.expenses {
+            for payer in expense.payers {
+                if (payer.payerName == participant && payer.isOn) {
+                    if (payer.exceptionAmount != 0) {
+                        totalParticipantPaid += payer.exceptionAmount
+                    } else {
+                        var totalExceptionValue = 0.0
+                        var counter = 0.0
+                        for (expensePayer) in expense.payers {
+                            totalExceptionValue += expensePayer.exceptionAmount
+                            if (expensePayer.isOn && expensePayer.exceptionAmount == 0.0) {
+                                counter += 1.0
+                            }
+                        }
+                        
+                            totalParticipantPaid += (expense.totalValue - totalExceptionValue) / counter
+                        
+                    }
+                }
+            }
+        }
+        return totalParticipantPaid
     }
 }
 

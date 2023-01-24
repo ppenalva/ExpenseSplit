@@ -42,10 +42,15 @@ struct ExpenseDetailEditView: View {
             
             Section(header: Text("Payers")) {
                 ForEach(expenseData.payers) {payer in
-                
-                    Text(payer.payerName)
-                    
-                    
+                    if (payer.isOn) {
+                        HStack {
+                            Text(payer.payerName)
+                            Spacer()
+                            Text(String(format: "%.2f",payer.exceptionAmount))
+                            Spacer()
+                            Text(String(format: "%.2f", calculatePayerAmount(payer: payer)))
+                        }
+                    }
                 }
             }
         }
@@ -68,6 +73,21 @@ struct ExpenseDetailEditView: View {
                     }
             }
             .navigationTitle("Mi pantalla otra")
+        }
+    }
+    func calculatePayerAmount (payer: PartyInfo.Expense.Payer ) -> Double {
+        if (payer.exceptionAmount != 0) {
+            return payer.exceptionAmount
+        } else {
+            var totalExceptionValue = 0.0
+            var counter = 0.0
+            for (expensePayer) in expenseData.payers {
+                totalExceptionValue += expensePayer.exceptionAmount
+                if (expensePayer.isOn && expensePayer.exceptionAmount == 0.0) {
+                    counter += 1.0
+                }
+            }
+            return (expenseData.totalValue - totalExceptionValue) / counter
         }
     }
 }
