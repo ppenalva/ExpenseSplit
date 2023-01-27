@@ -20,7 +20,7 @@ struct PartyInfo: Identifiable, Codable {
         self.title = title
         self.participants = participants.map { Participant(name: $0.name) }
         self.theme = theme
-        self.expenses = expenses.map { Expense(description: $0.description, totalValue: $0.totalValue, payers: $0.payers.map {PartyInfo.Expense.Payer(isOn: $0.isOn, payerName: $0.payerName, exceptionAmount: $0.exceptionAmount)})
+        self.expenses = expenses.map { Expense(description: $0.description, totalValue: $0.totalValue, payers: $0.payers.map {PartyInfo.Expense.Payer(isOn: $0.isOn, payerName: $0.payerName, exceptionAmount: $0.exceptionAmount)},enjoyers: $0.enjoyers.map {PartyInfo.Expense.Enjoyer(isOn: $0.isOn, enjoyerName: $0.enjoyerName, exceptionAmount: $0.exceptionAmount)})
         }
     }
 }
@@ -57,7 +57,9 @@ extension PartyInfo {
 extension PartyInfo {
     static var partyData: [PartyInfo] =
     [
-        PartyInfo(title: "Año Nuevo 2023", participants: [Participant(name:"Pablo"),Participant(name:"Juan")], theme: .yellow, expenses: [Expense(description: "Factura 1", totalValue: 130.0, payers: [Expense.Payer(isOn: false,payerName: "Pablo", exceptionAmount: 130)])])
+        PartyInfo(title: "Año Nuevo 2023", participants: [Participant(name:"Pablo"),Participant(name:"Juan")], theme: .yellow, expenses: [Expense(description: "Factura 1", totalValue: 130.0, payers: [Expense.Payer(isOn: false,payerName: "Pablo", exceptionAmount: 130)],enjoyers: [Expense.Enjoyer(isOn: false,enjoyerName: "Pablo", exceptionAmount: 130)])])
+                 
+                                                                                                
     ]
 }
 

@@ -28,7 +28,8 @@ struct PartiesView: View {
                     .isDetailLink(false)
                     .listRowBackground(party.theme.mainColor)
             }
-            
+            .onDelete(perform: deleteParty)
+            .onMove(perform: moveParty)
         }
         .navigationTitle("Parties")
         .toolbar {
@@ -64,5 +65,12 @@ struct PartiesView: View {
             
         }
     }
-       
+    func deleteParty( at offsets: IndexSet) {
+        parties.remove(atOffsets: offsets)
+        }
+    
+func moveParty( from source: IndexSet, to destination: Int) {
+    parties.move(fromOffsets: source, toOffset: destination)
 }
+}
+
