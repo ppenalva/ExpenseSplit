@@ -20,6 +20,7 @@ struct PartyDetailView: View {
     @State private var isPresentingPartyEditView = false
     @State private var isPresentingNewExpenseView = false
     @State private var isPresentingSummaryView = false
+    @State private var isPresentingExpenseCleaningView = false
     
     var body: some View {
         
@@ -74,6 +75,18 @@ struct PartyDetailView: View {
                         Text(String(format: "%.2f", a))
                         Text(String(format: "%.2f", b))
                         Text(String(format: "%.2f", c))
+                            .onTapGesture {
+                                newExpenseData.description = "Liquidacion"
+                                newExpenseData.totalValue = c
+                                
+                                 newPayerData.isOn = true
+                                newPayerData.payerName = participant.name
+                                let newPayer = PartyInfo.Expense.Payer(data: newPayerData)
+                               newExpenseData.payers.append( newPayer)
+
+                                 isPresentingExpenseCleaningView = true
+                        }
+                            .disabled(c >= 0)
                     }
                 }
             }
@@ -155,6 +168,30 @@ struct PartyDetailView: View {
                     }
             }
         }
+        .sheet(isPresented: $isPresentingExpenseCleaningView) {
+            NavigationView {
+                ExpenseDetailEditView (expenseData: $newExpenseData)
+                    .navigationTitle(newExpenseData.description)
+                   .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                               isPresentingExpenseCleaningView = false
+                                newExpenseData = PartyInfo.Expense.Data()
+                            }
+                       }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Confirm") {
+                                let newExpense = PartyInfo.Expense(data: newExpenseData)
+                                party.expenses.append(newExpense)
+                                isPresentingNewExpenseView = false
+                                newExpenseData = PartyInfo.Expense.Data()
+                                
+                            }
+                        }
+                   }
+                
+            }
+        }
     }
     func calculateParticipantPaidAmount (participant: String ) -> Double {
         var totalParticipantPaid = 0.0
@@ -214,6 +251,6 @@ struct PartyDetailView: View {
 func moveExpense( from source: IndexSet, to destination: Int) {
     party.expenses.move(fromOffsets: source, toOffset: destination)
 }
-}
+   }
 
 
